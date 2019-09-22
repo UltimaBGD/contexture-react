@@ -1,5 +1,6 @@
 import React from 'react'
 import _ from 'lodash/fp'
+import F from 'futil-js'
 import { Flex } from '../greyVest'
 
 let ErrorText = ({ children }) => (
@@ -17,15 +18,12 @@ let ErrorBlock = ({ children, ...props }) => (
   </Flex>
 )
 
-let ErrorList = ({ block = false, children }) =>
-  _.map(
-    e =>
-      block ? (
-        <ErrorBlock key={e}>{e}</ErrorBlock>
-      ) : (
-        <ErrorText key={e}>{e}</ErrorText>
-      ),
+let ErrorList = ({ block = false, children }) => {
+  let Component = block ? ErrorBlock : ErrorText
+  return F.mapIndexed(
+    (e, i) => <Component key={i}>{e}</Component>,
     _.castArray(children)
   )
+}
 
 export default ErrorList
