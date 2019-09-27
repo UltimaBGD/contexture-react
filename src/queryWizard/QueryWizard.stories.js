@@ -19,6 +19,7 @@ let mapNodeToDescription = types => (node, fields) => ({
 
 let WizardStory = () => (
   <QueryWizard
+    hideNextSteps
     tree={tree}
     path={['root']}
     fields={fields}
@@ -33,7 +34,7 @@ let WizardStory = () => (
 )
 
 let AccordionStory = () => (
-  <StepsAccordion>
+  <StepsAccordion hideNextSteps>
     <AccordionStep isRequired={true} title={<h1>Test title</h1>}>
       <FilterButtonList
         tree={tree}

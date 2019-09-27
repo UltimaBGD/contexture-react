@@ -13,16 +13,16 @@ let Buttons = _.flow(
   setDisplayName('Buttons'),
   observer,
   withTheme
-)(({ step, totalSteps, currentStep, onSubmit, theme: { Button, Icon } }) => (
+)(({ step, totalSteps, setCurrentStep, onSubmit, theme: { Button, Icon } }) => (
   <>
     {step > 0 && (
-      <Button onClick={F.sets(step - 1, currentStep)} className="back-button">
+      <Button onClick={() => setCurrentStep(step - 1)} className="back-button">
         <Icon icon="PreviousPage" />
         Back
       </Button>
     )}
     {step < totalSteps - 1 ? (
-      <Button primary onClick={F.sets(step + 1, currentStep)} disabled={false}>
+      <Button primary onClick={() => setCurrentStep(step + 1)} disabled={false}>
         Continue
       </Button>
     ) : (
@@ -43,19 +43,20 @@ export let AccordionStep = _.flow(
     step,
     totalSteps,
     currentStep,
+    setCurrentStep,
     title,
     isRequired = false,
     onSubmit,
     children,
     theme: { Icon },
   }) => {
-    let open = F.view(currentStep) === step
+    let open = currentStep === step
     return (
       <div className={`accordion-step ${className || ''}`} style={style}>
         <Flex
           alignItems="center"
           justifyContent="space-between"
-          onClick={F.sets(open ? -1 : step, currentStep)}
+          onClick={() => setCurrentStep(open ? -1 : step)}
           style={{ cursor: 'pointer' }}
         >
           <Flex alignItems="center">
@@ -71,7 +72,7 @@ export let AccordionStep = _.flow(
         {open && (
           <>
             <div className="step-contents">{children}</div>
-            <Buttons {...{ step, totalSteps, currentStep, onSubmit }} />
+            <Buttons {...{ step, totalSteps, setCurrentStep, onSubmit }} />
           </>
         )}
       </div>
@@ -79,19 +80,40 @@ export let AccordionStep = _.flow(
   }
 )
 
-let StepsAccordion = ({ onSubmit = _.noop, children, className, ...props }) => {
-  let currentStep = F.stateLens(React.useState(0))
+let useStepState = () => {
+  let [state, setState] = React.useState({ current: 0, lastVisible: 0 })
+  let update = value =>
+    setState({
+      current: value,
+      lastVisible: _.max([state.lastVisible, value]),
+    })
+  return [state.current, update, state.lastVisible]
+}
+
+let StepsAccordion = ({
+  onSubmit = _.noop,
+  hideNextSteps = false,
+  children,
+  className,
+  ...props
+}) => {
+  let [currentStep, setCurrentStep, lastVisibleStep] = useStepState()
+  let shouldShowStep = i => !hideNextSteps || i <= lastVisibleStep
   return (
     <div className={`steps-accordion ${className || ''}`} {...props}>
-      {React.Children.map(children, (child, i) => (
-        <child.type
-          {...{ currentStep, onSubmit }}
-          key={i}
-          step={i}
-          totalSteps={_.size(children)}
-          {...child.props}
-        />
-      ))}
+      {React.Children.map(
+        children,
+        (child, i) =>
+          shouldShowStep(i) && (
+            <child.type
+              {...{ currentStep, setCurrentStep, onSubmit }}
+              key={i}
+              step={i}
+              totalSteps={_.size(children)}
+              {...child.props}
+            />
+          )
+      )}
     </div>
   )
 }
