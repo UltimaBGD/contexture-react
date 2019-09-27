@@ -25,6 +25,9 @@ export SearchFilters, { SearchTree } from './SearchFilters'
 export SearchLayout from './SearchLayout'
 export ToggleFiltersHeader from './ToggleFiltersHeader'
 
+// purgatory
+export { StepsAccordion, AccordionStep } from './purgatory'
+
 // component library
 export * from './greyVest'
 
