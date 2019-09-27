@@ -2,8 +2,7 @@ import React from 'react'
 import _ from 'lodash/fp'
 import { observer } from 'mobx-react'
 import Portal from './Portal'
-import { openBinding } from './utils'
-import { expandProp } from '../utils/react'
+import { bindOpenLens } from './utils'
 
 let Modal = ({ isOpen, onClose, children, style = {}, className = '' }) => (
   <Portal>
@@ -42,6 +41,6 @@ let Modal = ({ isOpen, onClose, children, style = {}, className = '' }) => (
 )
 
 export default _.flow(
-  expandProp('open', openBinding),
+  bindOpenLens,
   observer
 )(Modal)

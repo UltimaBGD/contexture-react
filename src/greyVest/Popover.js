@@ -2,8 +2,7 @@ import React from 'react'
 import _ from 'lodash/fp'
 import OutsideClickHandler from 'react-outside-click-handler'
 import { observer } from 'mobx-react'
-import { openBinding } from './utils'
-import { expandProp } from '../utils/react'
+import { bindOpenLens } from './utils'
 
 // Simple popover
 let Popover = ({ isOpen, onClose, children, style }) =>
@@ -29,6 +28,6 @@ let Popover = ({ isOpen, onClose, children, style }) =>
   )
 
 export default _.flow(
-  expandProp('open', openBinding),
+  bindOpenLens,
   observer
 )(Popover)

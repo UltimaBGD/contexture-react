@@ -38,3 +38,5 @@ export TagsInput from './TagsInput'
 export Tag from './Tag'
 export DateInput from './DateInput'
 export StripedLoader from './StripedLoader'
+
+export { bindOpenLens } from './utils'
