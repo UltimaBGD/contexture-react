@@ -1,3 +1,6 @@
+# 2.1.0
+* GreyVest: add and export `bindOpenLens` utility
+
 # 2.0.6
 * camelCase `defaultNodeProps` schema util
 * Be explicit about utility function exports in `src/index.js`
