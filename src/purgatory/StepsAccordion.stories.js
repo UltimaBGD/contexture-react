@@ -18,7 +18,7 @@ storiesOf('Components|Search Components/Internals', module)
     let isClicked = F.stateLens(React.useState(false))
     let theme = useTheme()
     return (
-      <StepsAccordion>
+      <StepsAccordion hideNextSteps>
         <AccordionStep isRequired={true} title={makeStepTitle()}>
           <div>
             <div>A</div>
@@ -29,6 +29,8 @@ storiesOf('Components|Search Components/Internals', module)
         <AccordionStep
           isRequired={true}
           title={makeStepTitle('Click the button')}
+          isValid={F.view(isClicked)}
+          hideBackButton
         >
           <theme.Button onClick={F.on(isClicked)}>
             Button {F.view(isClicked) && '(clicked)'}

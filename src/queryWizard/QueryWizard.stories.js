@@ -34,7 +34,7 @@ let WizardStory = () => (
 )
 
 let AccordionStory = () => (
-  <StepsAccordion hideNextSteps>
+  <StepsAccordion hideNextSteps hideBackButton>
     <AccordionStep isRequired={true} title={<h1>Test title</h1>}>
       <FilterButtonList
         tree={tree}

@@ -32,8 +32,9 @@ let QueryWizard = _.flow(
     mapNodeToProps = _.noop,
     style,
     hideNextSteps,
+    hideBackButton = false,
   }) => (
-    <StepsAccordion {...{ style, onSubmit, hideNextSteps }}>
+    <StepsAccordion {...{ style, onSubmit, hideNextSteps, hideBackButton }}>
       {F.mapIndexed(
         (child, i) => (
           <AccordionStep

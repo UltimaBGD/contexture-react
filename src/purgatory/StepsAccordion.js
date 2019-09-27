@@ -13,25 +13,42 @@ let Buttons = _.flow(
   setDisplayName('Buttons'),
   observer,
   withTheme
-)(({ step, totalSteps, setCurrentStep, onSubmit, theme: { Button, Icon } }) => (
-  <>
-    {step > 0 && (
-      <Button onClick={() => setCurrentStep(step - 1)} className="back-button">
-        <Icon icon="PreviousPage" />
-        Back
-      </Button>
-    )}
-    {step < totalSteps - 1 ? (
-      <Button primary onClick={() => setCurrentStep(step + 1)} disabled={false}>
-        Continue
-      </Button>
-    ) : (
-      <Button primary onClick={onSubmit}>
-        View Results
-      </Button>
-    )}
-  </>
-))
+)(
+  ({
+    step,
+    isValid,
+    totalSteps,
+    setCurrentStep,
+    onSubmit,
+    hideBackButton,
+    theme: { Button, Icon },
+  }) => (
+    <>
+      {!hideBackButton && step > 0 && (
+        <Button
+          onClick={() => setCurrentStep(step - 1)}
+          className="back-button"
+        >
+          <Icon icon="PreviousPage" />
+          Back
+        </Button>
+      )}
+      {step < totalSteps - 1 ? (
+        <Button
+          primary
+          onClick={() => setCurrentStep(step + 1)}
+          disabled={!isValid}
+        >
+          Continue
+        </Button>
+      ) : (
+        <Button primary onClick={onSubmit} disabled={!isValid}>
+          View Results
+        </Button>
+      )}
+    </>
+  )
+)
 
 export let AccordionStep = _.flow(
   setDisplayName('AccordionStep'),
@@ -46,8 +63,10 @@ export let AccordionStep = _.flow(
     setCurrentStep,
     title,
     isRequired = false,
+    isValid = true,
     onSubmit,
     children,
+    hideBackButton,
     theme: { Icon },
   }) => {
     let open = currentStep === step
@@ -72,7 +91,16 @@ export let AccordionStep = _.flow(
         {open && (
           <>
             <div className="step-contents">{children}</div>
-            <Buttons {...{ step, totalSteps, setCurrentStep, onSubmit }} />
+            <Buttons
+              {...{
+                step,
+                totalSteps,
+                setCurrentStep,
+                onSubmit,
+                isValid,
+                hideBackButton,
+              }}
+            />
           </>
         )}
       </div>
@@ -93,6 +121,7 @@ let useStepState = () => {
 let StepsAccordion = ({
   onSubmit = _.noop,
   hideNextSteps = false,
+  hideBackButton = false,
   children,
   className,
   ...props
@@ -110,6 +139,7 @@ let StepsAccordion = ({
               key={i}
               step={i}
               totalSteps={_.size(children)}
+              hideBackButton={hideBackButton}
               {...child.props}
             />
           )
